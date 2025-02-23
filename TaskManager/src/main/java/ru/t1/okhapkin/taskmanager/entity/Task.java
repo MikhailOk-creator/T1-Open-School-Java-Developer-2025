@@ -14,21 +14,20 @@ public class Task {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description")
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     public Task() {
     }
 
-    public Task(UUID id, String title, String description, User user) {
+    public Task(UUID id, String title, String description, Long userId) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.user = user;
+        this.userId = userId;
     }
 
     public UUID getId() {
@@ -55,11 +54,11 @@ public class Task {
         this.description = description;
     }
 
-    public User getUser() {
-        return user;
+    public Long getUser() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(Long userId) {
+        this.userId = userId;
     }
 }

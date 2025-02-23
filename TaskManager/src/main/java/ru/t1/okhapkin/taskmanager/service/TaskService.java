@@ -5,7 +5,6 @@ import ru.t1.okhapkin.taskmanager.aspect.annotaion.CustomTracking;
 import ru.t1.okhapkin.taskmanager.dto.TaskDTO;
 import ru.t1.okhapkin.taskmanager.entity.Task;
 import ru.t1.okhapkin.taskmanager.repository.TaskRepository;
-import ru.t1.okhapkin.taskmanager.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,25 +14,19 @@ import java.util.UUID;
 public class TaskService {
 
     private final TaskRepository taskRepository;
-    private final UserRepository userRepository;
 
-    public TaskService(TaskRepository taskRepository, UserRepository userRepository) {
+    public TaskService(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
-        this.userRepository = userRepository;
     }
 
     @CustomTracking
     public Task createTask(TaskDTO taskDTO) {
-        if (userRepository.findById(taskDTO.userID()).isPresent()) {
-            return taskRepository.save(new Task(
-                    UUID.randomUUID(),
-                    taskDTO.title(),
-                    taskDTO.description(),
-                    userRepository.findById(taskDTO.userID()).get()
-            ));
-        } else {
-            throw new RuntimeException("User not found with id " + taskDTO.userID());
-        }
+        return taskRepository.save(new Task(
+                UUID.randomUUID(),
+                taskDTO.title(),
+                taskDTO.description(),
+                taskDTO.userID()
+        ));
     }
 
     @CustomTracking
@@ -57,7 +50,7 @@ public class TaskService {
             Task task = originalTask.get();
             task.setTitle(updatedTask.title());
             task.setDescription(updatedTask.description());
-            task.setUser(userRepository.getReferenceById(updatedTask.userID()));
+            task.setUser(updatedTask.userID());
             return taskRepository.save(task);
         } else {
             throw new RuntimeException("Task not found with id " + idOfOriginalTask);
