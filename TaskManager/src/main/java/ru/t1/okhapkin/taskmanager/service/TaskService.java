@@ -31,12 +31,7 @@ public class TaskService {
 
     @CustomTracking
     public Optional<Task> getTaskById(UUID idOfTask) {
-        Optional<Task> originalTask = taskRepository.findById(idOfTask);
-        if (originalTask.isPresent()) {
-            return originalTask;
-        } else {
-            throw new RuntimeException("Task not found with id " + idOfTask);
-        }
+        return taskRepository.findById(idOfTask);
     }
 
     public List<Task> getAllTasks() {
@@ -45,24 +40,14 @@ public class TaskService {
 
     @CustomTracking
     public Task updateTask(UUID idOfOriginalTask, TaskDTO updatedTask) {
-        Optional<Task> originalTask = getTaskById(idOfOriginalTask);
-        if (originalTask.isPresent()) {
-            Task task = originalTask.get();
-            task.setTitle(updatedTask.title());
-            task.setDescription(updatedTask.description());
-            task.setUser(updatedTask.userID());
-            return taskRepository.save(task);
-        } else {
-            throw new RuntimeException("Task not found with id " + idOfOriginalTask);
-        }
+        Task task = taskRepository.findById(idOfOriginalTask).get();
+        task.setTitle(updatedTask.title());
+        task.setDescription(updatedTask.description());
+        task.setUser(updatedTask.userID());
+        return taskRepository.save(task);
     }
 
     public void deleteTask(UUID idOfTask) {
-        Optional<Task> originalTask = getTaskById(idOfTask);
-        if (originalTask.isPresent()) {
-            taskRepository.deleteById(idOfTask);
-        } else {
-            throw new RuntimeException("Task not found with id " + idOfTask);
-        }
+        taskRepository.deleteById(idOfTask);
     }
 }

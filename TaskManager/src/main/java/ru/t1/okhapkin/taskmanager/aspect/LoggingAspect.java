@@ -3,17 +3,26 @@ package ru.t1.okhapkin.taskmanager.aspect;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.t1.okhapkin.taskmanager.entity.Task;
+import ru.t1.okhapkin.taskmanager.repository.TaskRepository;
 
 import java.util.Arrays;
-import java.util.logging.Logger;
+import java.util.UUID;
 
 @Aspect
 @Component
 public class LoggingAspect {
 
-    private final java.util.logging.Logger logger = Logger.getLogger(LoggingAspect.class.getName());
+    private final Logger logger = LoggerFactory.getLogger(LoggingAspect.class.getName());
+
+    private final TaskRepository taskRepository;
+
+    public LoggingAspect(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
+    }
 
     // Логирование перед выполнением метода
     @Before("execution(* ru.t1.okhapkin.taskmanager.service.*..*(..))")
@@ -21,7 +30,7 @@ public class LoggingAspect {
         String className = joinPoint.getTarget().getClass().getSimpleName();
         String methodName = joinPoint.getSignature().getName();
         Object[] args = joinPoint.getArgs();
-        logger.info("The method " + className + "." + methodName + " was called with arguments: " + Arrays.toString(args));
+        logger.info("The method {}.{} was called with arguments: {}", className, methodName, Arrays.toString(args));
     }
 
     // Логирование после успешного выполнения метода
@@ -29,26 +38,26 @@ public class LoggingAspect {
     public void logAfterReturning(JoinPoint joinPoint) {
         String methodName = joinPoint.getSignature().getName();
         String className = joinPoint.getTarget().getClass().getSimpleName();
-        logger.info("The method " + className + "." + methodName + " was successfully completed");
+        logger.info("The method {}.{} was successfully completed", className, methodName);
     }
 
     // Логирование при создании нового задания
     @AfterReturning(pointcut = "execution(* ru.t1.okhapkin.taskmanager.service.TaskService.createTask(..))", returning = "result")
     public void logAfterCreationNewTask(Task result) {
-        logger.info("A new task was created with id: " + result.getId());
+        logger.info("A new task was created with id: {}", result.getId());
     }
 
     // Логирование при изменении задания
     @AfterReturning(pointcut = "execution(* ru.t1.okhapkin.taskmanager.service.TaskService.updateTask(..))", returning = "result")
     public void logAfterUpdateTask(JoinPoint joinPoint, Task result) {
         Object[] args = joinPoint.getArgs();
-        logger.info("The task was updated with id: " + result.getId() + ". Arguments with updates: " + Arrays.toString(args));
+        logger.info("The task was updated with id: {}. Arguments with updates: {}", result.getId(), Arrays.toString(args));
     }
 
     // Логирование при удалении задания
     @AfterReturning(pointcut = "execution(* ru.t1.okhapkin.taskmanager.service.TaskService.deleteTask(..))")
     public void logAfterDeletedTask(JoinPoint joinPoint) {
-        logger.info("The task deleted with id: " + Arrays.toString(joinPoint.getArgs()));
+        logger.info("The task deleted with id: {}", joinPoint.getArgs()[0]);
     }
 
     // Логирование при возникновении исключения
@@ -56,7 +65,7 @@ public class LoggingAspect {
     public void logAfterThrowing(JoinPoint joinPoint, Exception exception) {
         String methodName = joinPoint.getSignature().getName();
         String className = joinPoint.getTarget().getClass().getSimpleName();
-        logger.info("The method " + className + "." + methodName + " was completed with error: " + exception.getMessage());
+        logger.error("The method {}.{} was completed with error: {}", className, methodName, exception.getMessage());
     }
 
     // Замер времени выполнения метода
@@ -69,13 +78,36 @@ public class LoggingAspect {
         try {
             Object result = joinPoint.proceed(); // Выполнение метода
             long endTime = System.currentTimeMillis();
-            logger.info("The method " + className + "." + methodName + " was completed for " + (endTime - startTime) + " ms");
+            logger.info("The method {}.{} was completed for {} ms", className, methodName, endTime - startTime);
             return result;
         } catch (Exception e) {
             long endTime = System.currentTimeMillis();
-            System.out.println("The method " + className + "." + methodName + " was completed with error for " + (endTime - startTime) + " ms");
+            logger.error("The method {}.{} was completed with error for {} ms", className, methodName, endTime - startTime);
             throw e;
         }
+    }
+
+    // Проверка наличия задания по id
+    @Around("execution(* ru.t1.okhapkin.taskmanager.service.TaskService.getTaskById(..)) || " +
+            "execution(* ru.t1.okhapkin.taskmanager.service.TaskService.updateTask(..)) || " +
+            "execution(* ru.t1.okhapkin.taskmanager.service.TaskService.deleteTask(..))")
+    public Object validateTaskId(ProceedingJoinPoint joinPoint) {
+        Object proceeded = null;
+        String methodName = joinPoint.getSignature().getName();
+        String className = joinPoint.getTarget().getClass().getSimpleName();
+        UUID taskId = (UUID) joinPoint.getArgs()[0];
+
+        if(!taskRepository.existsById(taskId)) {
+            logger.error("Error with method {}.{} - Task not found with id {}", className, methodName, taskId);
+        } else {
+            try {
+                proceeded = joinPoint.proceed();
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return proceeded;
     }
 
 }
