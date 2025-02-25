@@ -1,0 +1,22 @@
+services:
+  backend:
+    container_name: task_manager_backend
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data/back:/application/logs
+    depends_on:
+      - database
+    env_file: .env
+    restart: always
+
+  database:
+    container_name: task_manager_database
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    env_file: .env
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    restart: always

@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: TaskManager
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:task_manager_database}
+    username: ${POSTGRES_USER:application}
+    password: ${POSTGRES_PASSWORD:su}
+    driver-class-name: org.postgresql.Driver
+    jpa:
+      database: postgresql
+      generate-ddl: false
+    main:
+      allow-bean-definition-overriding: true
+
+logging:
+  file:
+    path: ./logs/
