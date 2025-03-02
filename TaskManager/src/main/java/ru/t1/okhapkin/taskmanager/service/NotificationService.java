@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import ru.t1.okhapkin.taskmanager.dto.TaskKafkaDTO;
 
 import java.util.List;
 
@@ -23,9 +24,9 @@ public class NotificationService {
         this.mailSender = mailSender;
     }
 
-    public void newMessages(List<String> messages) {
+    public void newMessages(List<TaskKafkaDTO> messages) {
         messages.forEach(message ->
-                sendEmail(emailForm, "Task update", message)
+                sendEmail(emailForm, "The task with the ID " + message.id() + " has been updated", message.changes())
         );
     }
 

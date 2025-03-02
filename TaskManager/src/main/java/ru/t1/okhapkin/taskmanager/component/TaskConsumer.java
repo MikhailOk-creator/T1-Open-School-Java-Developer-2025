@@ -6,6 +6,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
+import ru.t1.okhapkin.taskmanager.dto.TaskKafkaDTO;
 import ru.t1.okhapkin.taskmanager.service.NotificationService;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class TaskConsumer {
     @KafkaListener(topics = "${t1.kafka.topic.tasks_update}",
             groupId = "${t1.kafka.consumer.group-id}",
             containerFactory = "kafkaListenerContainerFactory")
-    public void listenTaskEvents(@Payload List<String> messages,
+    public void listenTaskEvents(@Payload List<TaskKafkaDTO> messages,
                                  Acknowledgment acknowledgment) {
         try {
             log.debug("Processing new messages containing task updates");
