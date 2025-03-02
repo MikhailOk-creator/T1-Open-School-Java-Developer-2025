@@ -8,6 +8,8 @@ services:
       - ./data/back:/application/logs
     depends_on:
       - database
+      - zookeeper
+      - kafka
     env_file: .env
     restart: always
 
@@ -30,6 +32,7 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    restart: always
 
   kafka:
     image: confluentinc/cp-kafka:7.4.4
@@ -49,3 +52,4 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+    restart: always

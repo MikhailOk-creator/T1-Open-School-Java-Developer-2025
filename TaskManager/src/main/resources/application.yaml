@@ -11,8 +11,6 @@ spring:
       generate-ddl: false
     main:
       allow-bean-definition-overriding: true
-  kafka:
-    bootstrap-servers: localhost:29092
   mail:
     host: ${MAIL_HOST:smtp.gmail.com}
     port: ${MAIL_PORT:587}
@@ -34,13 +32,9 @@ logging:
 t1:
   kafka:
     bootstrap:
-      server: localhost:29092
+      server: ${KAFKA_HOST:localhost}:${KAFKA_PORT:9092}
     consumer:
       group-id: t1-task
       max.poll.records: 10
-    producer:
-      enable: true
     topic:
       tasks_update: t1-task-updates
-    listener:
-      poll_timeout: 1000
