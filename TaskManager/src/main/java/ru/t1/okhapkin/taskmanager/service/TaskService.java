@@ -2,6 +2,7 @@ package ru.t1.okhapkin.taskmanager.service;
 
 import org.springframework.stereotype.Service;
 import ru.t1.okhapkin.taskmanager.aspect.annotaion.CustomTracking;
+import ru.t1.okhapkin.taskmanager.component.TaskProducer;
 import ru.t1.okhapkin.taskmanager.dto.TaskDTO;
 import ru.t1.okhapkin.taskmanager.entity.Task;
 import ru.t1.okhapkin.taskmanager.repository.TaskRepository;
@@ -14,9 +15,11 @@ import java.util.UUID;
 public class TaskService {
 
     private final TaskRepository taskRepository;
+    private final TaskProducer taskProducer;
 
-    public TaskService(TaskRepository taskRepository) {
+    public TaskService(TaskRepository taskRepository, TaskProducer taskProducer) {
         this.taskRepository = taskRepository;
+        this.taskProducer = taskProducer;
     }
 
     @CustomTracking
@@ -44,6 +47,7 @@ public class TaskService {
         task.setTitle(updatedTask.title());
         task.setDescription(updatedTask.description());
         task.setUser(updatedTask.userID());
+        taskProducer.sendTaskUpdate(task);
         return taskRepository.save(task);
     }
 

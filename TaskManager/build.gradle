@@ -18,6 +18,10 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.apache.kafka:kafka-clients:3.7.1'
+    implementation 'org.apache.kafka:kafka-streams:3.7.1'
+    implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -27,6 +31,7 @@ dependencies {
     implementation 'org.aspectj:aspectjweaver:1.9.7'
     runtimeOnly 'org.postgresql:postgresql'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

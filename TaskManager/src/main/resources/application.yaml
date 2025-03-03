@@ -11,7 +11,30 @@ spring:
       generate-ddl: false
     main:
       allow-bean-definition-overriding: true
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 logging:
+  level:
+    ROOT: INFO
   file:
     path: ./logs/
+
+t1:
+  kafka:
+    bootstrap:
+      server: ${KAFKA_HOST:localhost}:${KAFKA_PORT:9092}
+    consumer:
+      group-id: t1-task
+      max.poll.records: 10
+    topic:
+      tasks_update: t1-task-updates
