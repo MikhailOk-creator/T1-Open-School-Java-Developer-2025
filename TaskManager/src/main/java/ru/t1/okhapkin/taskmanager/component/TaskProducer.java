@@ -14,7 +14,7 @@ public class TaskProducer {
     private final Logger log = LoggerFactory.getLogger(TaskProducer.class);
 
     @Value("${t1.kafka.topic.tasks_update}")
-    private String TOPIC;
+    private String topic;
 
     private final KafkaTemplate<String, TaskKafkaDTO> kafkaTemplate;
 
@@ -29,7 +29,7 @@ public class TaskProducer {
                     updatedTask.getDescription(),
                     updatedTask.getUser());
 
-            kafkaTemplate.send(TOPIC, new TaskKafkaDTO(updatedTask.getId(), message));
+            kafkaTemplate.send(topic, new TaskKafkaDTO(updatedTask.getId(), message));
         } catch (Exception e) {
             log.error(e.getMessage());
         }

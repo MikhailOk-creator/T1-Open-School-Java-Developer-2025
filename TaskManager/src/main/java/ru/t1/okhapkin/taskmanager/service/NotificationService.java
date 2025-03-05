@@ -15,7 +15,7 @@ public class NotificationService {
 
     private final Logger log = LoggerFactory.getLogger(NotificationService.class);
 
-    @Value("${spring.mail.username}")
+    @Value("${t1.mail.username}")
     private String emailForm;
 
     private final JavaMailSender mailSender;

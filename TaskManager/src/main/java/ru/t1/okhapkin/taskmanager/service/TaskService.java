@@ -47,8 +47,9 @@ public class TaskService {
         task.setTitle(updatedTask.title());
         task.setDescription(updatedTask.description());
         task.setUser(updatedTask.userID());
+        Task updTask = taskRepository.save(task);
         taskProducer.sendTaskUpdate(task);
-        return taskRepository.save(task);
+        return updTask;
     }
 
     public void deleteTask(UUID idOfTask) {
