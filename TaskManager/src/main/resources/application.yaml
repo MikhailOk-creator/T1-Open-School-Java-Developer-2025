@@ -13,8 +13,6 @@ spring:
       allow-bean-definition-overriding: true
 
 logging:
-  level:
-    ROOT: INFO
   file:
     path: ./logs/
 
@@ -32,3 +30,9 @@ t1:
     port: ${MAIL_PORT:587}
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
+    email_to: ${MAIL_TO}
+
+http:
+  logging:
+    enabled: true
+    level: INFO

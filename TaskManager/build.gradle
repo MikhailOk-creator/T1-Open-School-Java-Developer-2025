@@ -14,6 +14,7 @@ java {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -29,6 +30,7 @@ dependencies {
     implementation 'org.flywaydb:flyway-database-postgresql'
     implementation 'org.aspectj:aspectjrt:1.9.7'
     implementation 'org.aspectj:aspectjweaver:1.9.7'
+    implementation 'ru.t1.okhapkin:MyStarterLogs:1.0.0-SNAPSHOT'
     runtimeOnly 'org.postgresql:postgresql'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.kafka:spring-kafka-test'

@@ -1,7 +1,7 @@
 package ru.t1.okhapkin.taskmanager.service;
 
 import org.springframework.stereotype.Service;
-import ru.t1.okhapkin.taskmanager.aspect.annotaion.CustomTracking;
+import ru.t1.okhapkin.mystarterlogs.aspect.annotaion.CustomTimeTracking;
 import ru.t1.okhapkin.taskmanager.component.TaskProducer;
 import ru.t1.okhapkin.taskmanager.dto.TaskDTO;
 import ru.t1.okhapkin.taskmanager.entity.Task;
@@ -22,7 +22,7 @@ public class TaskService {
         this.taskProducer = taskProducer;
     }
 
-    @CustomTracking
+    @CustomTimeTracking
     public Task createTask(TaskDTO taskDTO) {
         return taskRepository.save(new Task(
                 UUID.randomUUID(),
@@ -32,7 +32,7 @@ public class TaskService {
         ));
     }
 
-    @CustomTracking
+    @CustomTimeTracking
     public Optional<Task> getTaskById(UUID idOfTask) {
         return taskRepository.findById(idOfTask);
     }
@@ -41,7 +41,7 @@ public class TaskService {
         return taskRepository.findAll();
     }
 
-    @CustomTracking
+    @CustomTimeTracking
     public Task updateTask(UUID idOfOriginalTask, TaskDTO updatedTask) {
         Task task = taskRepository.findById(idOfOriginalTask).get();
         task.setTitle(updatedTask.title());

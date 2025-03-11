@@ -18,6 +18,9 @@ public class NotificationService {
     @Value("${t1.mail.username}")
     private String emailForm;
 
+    @Value("${t1.mail.email_to}")
+    private String emailTo;
+
     private final JavaMailSender mailSender;
 
     public NotificationService(JavaMailSender mailSender) {
@@ -26,7 +29,7 @@ public class NotificationService {
 
     public void newMessages(List<TaskKafkaDTO> messages) {
         messages.forEach(message ->
-                sendEmail(emailForm, "The task with the ID " + message.id() + " has been updated", message.changes())
+                sendEmail(emailTo, "The task with the ID " + message.id() + " has been updated", message.changes())
         );
     }
 

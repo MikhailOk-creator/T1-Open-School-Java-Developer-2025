@@ -2,9 +2,7 @@
 В данном репозитории хранятся домашние работы. А также осуществляется их сдача при помощи Pull Request.
 
 Будут подчёркнуты следующие темы:
-- [ ] Spring AOP
-- [ ] Kafka
-- [ ] Spring Security, JWT
-- [ ] Микросервисы
-- [ ] Свой Spring Boot Starter
+- [*] Spring AOP
+- [*] Kafka
+- [*] Свой Spring Boot Starter - реализован в [отдельном репозитории](https://github.com/MikhailOk-creator/T1-Open-School-Java-Developer-2025-Addition)
 - [ ] Unit и интеграционное тестирование 
