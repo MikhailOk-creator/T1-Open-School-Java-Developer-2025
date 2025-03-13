@@ -1,6 +1,9 @@
 package ru.t1.okhapkin.taskmanager.dto;
 
-public record TaskDTO (
+import java.util.UUID;
+
+public record TaskResponseDTO (
+        UUID id,
         String title,
         String description,
         Long userID

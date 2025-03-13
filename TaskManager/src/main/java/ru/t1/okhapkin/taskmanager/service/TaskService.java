@@ -2,14 +2,16 @@ package ru.t1.okhapkin.taskmanager.service;
 
 import org.springframework.stereotype.Service;
 import ru.t1.okhapkin.mystarterlogs.aspect.annotaion.CustomTimeTracking;
+import ru.t1.okhapkin.taskmanager.dto.TaskRequestDTO;
+import ru.t1.okhapkin.taskmanager.dto.TaskResponseDTO;
+import ru.t1.okhapkin.taskmanager.entity.exception.TaskNotFoundException;
 import ru.t1.okhapkin.taskmanager.component.TaskProducer;
-import ru.t1.okhapkin.taskmanager.dto.TaskDTO;
 import ru.t1.okhapkin.taskmanager.entity.Task;
 import ru.t1.okhapkin.taskmanager.repository.TaskRepository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 
 @Service
 public class TaskService {
@@ -22,37 +24,50 @@ public class TaskService {
         this.taskProducer = taskProducer;
     }
 
+    public final Function<Task, TaskResponseDTO> toTaskResponseDTO = (Task task) ->
+            new TaskResponseDTO(task.getId(), task.getTitle(), task.getDescription(), task.getUser());
+
     @CustomTimeTracking
-    public Task createTask(TaskDTO taskDTO) {
-        return taskRepository.save(new Task(
-                UUID.randomUUID(),
-                taskDTO.title(),
-                taskDTO.description(),
-                taskDTO.userID()
-        ));
+    public TaskResponseDTO createTask(TaskRequestDTO taskDTO) {
+        return toTaskResponseDTO.apply(
+                taskRepository.save(
+                        new Task(
+                            UUID.randomUUID(),
+                            taskDTO.title(),
+                            taskDTO.description(),
+                            taskDTO.userID()
+                        )
+                )
+        );
     }
 
     @CustomTimeTracking
-    public Optional<Task> getTaskById(UUID idOfTask) {
-        return taskRepository.findById(idOfTask);
+    public TaskResponseDTO getTaskById(UUID idOfTask) {
+        return toTaskResponseDTO.apply(
+                taskRepository.findById(idOfTask)
+                        .orElseThrow(TaskNotFoundException::new)
+        );
     }
 
-    public List<Task> getAllTasks() {
-        return taskRepository.findAll();
+    public List<TaskResponseDTO> getAllTasks() {
+        return taskRepository.findAll()
+                .stream().map(toTaskResponseDTO).toList();
     }
 
     @CustomTimeTracking
-    public Task updateTask(UUID idOfOriginalTask, TaskDTO updatedTask) {
+    public TaskResponseDTO updateTask(UUID idOfOriginalTask, TaskRequestDTO updatedTask) {
         Task task = taskRepository.findById(idOfOriginalTask).get();
         task.setTitle(updatedTask.title());
         task.setDescription(updatedTask.description());
         task.setUser(updatedTask.userID());
         Task updTask = taskRepository.save(task);
         taskProducer.sendTaskUpdate(task);
-        return updTask;
+        return toTaskResponseDTO.apply(updTask);
     }
 
     public void deleteTask(UUID idOfTask) {
-        taskRepository.deleteById(idOfTask);
+        Task task = taskRepository.findById(idOfTask)
+                .orElseThrow(TaskNotFoundException::new);
+        taskRepository.delete(task);
     }
 }
