@@ -6,11 +6,11 @@ spring:
     username: ${POSTGRES_USER:application}
     password: ${POSTGRES_PASSWORD:su}
     driver-class-name: org.postgresql.Driver
-    jpa:
-      database: postgresql
-      generate-ddl: false
-    main:
-      allow-bean-definition-overriding: true
+  jpa:
+    database: postgresql
+    generate-ddl: false
+  main:
+    allow-bean-definition-overriding: true
 
 logging:
   file:
@@ -35,4 +35,4 @@ t1:
 http:
   logging:
     enabled: true
-    level: INFO
+    level: warn

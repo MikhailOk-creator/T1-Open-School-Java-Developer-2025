@@ -45,7 +45,7 @@ public class TaskService {
     public TaskResponseDTO getTaskById(UUID idOfTask) {
         return toTaskResponseDTO.apply(
                 taskRepository.findById(idOfTask)
-                        .orElseThrow(TaskNotFoundException::new)
+                        .orElseThrow(() -> new TaskNotFoundException(idOfTask))
         );
     }
 
@@ -56,7 +56,8 @@ public class TaskService {
 
     @CustomTimeTracking
     public TaskResponseDTO updateTask(UUID idOfOriginalTask, TaskRequestDTO updatedTask) {
-        Task task = taskRepository.findById(idOfOriginalTask).get();
+        Task task = taskRepository.findById(idOfOriginalTask)
+                .orElseThrow(() -> new TaskNotFoundException(idOfOriginalTask));
         task.setTitle(updatedTask.title());
         task.setDescription(updatedTask.description());
         task.setUser(updatedTask.userID());
@@ -67,7 +68,7 @@ public class TaskService {
 
     public void deleteTask(UUID idOfTask) {
         Task task = taskRepository.findById(idOfTask)
-                .orElseThrow(TaskNotFoundException::new);
+                .orElseThrow(() -> new TaskNotFoundException(idOfTask));
         taskRepository.delete(task);
     }
 }

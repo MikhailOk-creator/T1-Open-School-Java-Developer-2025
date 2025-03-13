@@ -3,7 +3,6 @@ package ru.t1.okhapkin.taskmanager.controller;
 import org.springframework.web.bind.annotation.*;
 import ru.t1.okhapkin.taskmanager.dto.TaskRequestDTO;
 import ru.t1.okhapkin.taskmanager.dto.TaskResponseDTO;
-import ru.t1.okhapkin.taskmanager.entity.Task;
 import ru.t1.okhapkin.taskmanager.service.TaskService;
 
 import java.util.List;

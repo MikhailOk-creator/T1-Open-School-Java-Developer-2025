@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: TaskManager
+  datasource:
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  flyway:
+    enabled: false
+
+logging:
+  file:
+    path: ./logs/
+
+t1:
+  kafka:
+    bootstrap:
+      server: localhost:9092
+    consumer:
+      group-id: t1-task
+      max.poll.records: 10
+    topic:
+      tasks_update: t1-task-updates
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: test@example.com
+    password: testpassword
+    email_to: test@example.com
+
+http:
+  logging:
+    enabled: true
+    level: warn
