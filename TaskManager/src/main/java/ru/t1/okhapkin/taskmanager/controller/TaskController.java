@@ -1,12 +1,11 @@
 package ru.t1.okhapkin.taskmanager.controller;
 
 import org.springframework.web.bind.annotation.*;
-import ru.t1.okhapkin.taskmanager.dto.TaskDTO;
-import ru.t1.okhapkin.taskmanager.entity.Task;
+import ru.t1.okhapkin.taskmanager.dto.TaskRequestDTO;
+import ru.t1.okhapkin.taskmanager.dto.TaskResponseDTO;
 import ru.t1.okhapkin.taskmanager.service.TaskService;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -20,17 +19,17 @@ public class TaskController {
     }
 
     @PostMapping
-    public Task createTask(@RequestBody TaskDTO task) {
+    public TaskResponseDTO createTask(@RequestBody TaskRequestDTO task) {
         return taskService.createTask(task);
     }
 
     @GetMapping("/{id}")
-    public Optional<Task> getTaskById(@PathVariable UUID id) {
+    public TaskResponseDTO getTaskById(@PathVariable UUID id) {
         return taskService.getTaskById(id);
     }
 
     @PutMapping("/{id}")
-    public Task updateTask(@PathVariable UUID id, @RequestBody TaskDTO taskDetails) {
+    public TaskResponseDTO updateTask(@PathVariable UUID id, @RequestBody TaskRequestDTO taskDetails) {
         return taskService.updateTask(id, taskDetails);
     }
 
@@ -40,7 +39,7 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<Task> getAllTasks() {
+    public List<TaskResponseDTO> getAllTasks() {
         return taskService.getAllTasks();
     }
 

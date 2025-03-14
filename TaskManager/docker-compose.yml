@@ -23,6 +23,16 @@ services:
       - ./data/db:/var/lib/postgresql/data
     restart: always
 
+  test_database:
+    container_name: test_task_manager_database
+    image: postgres:15-alpine
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_DB=test_task_manager_database
+      - POSTGRES_USER=application
+      - POSTGRES_PASSWORD=su
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.4
     hostname: zookeeper
