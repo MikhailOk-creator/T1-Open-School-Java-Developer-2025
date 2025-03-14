@@ -38,13 +38,9 @@ class TaskControllerIntegrationTest extends PostgresContainer {
     @Autowired
     private TaskProducer taskProducer;
 
-    private Task task;
-
     @BeforeEach
     void setUp() {
         taskRepository.deleteAll();
-        task = new Task(UUID.randomUUID(), "Test Task", "Test Description", 1L);
-        taskRepository.save(task);
     }
 
     @Test
@@ -61,6 +57,8 @@ class TaskControllerIntegrationTest extends PostgresContainer {
     @Test
     @DisplayName("Checking a successful refund by id")
     void testGetTaskById_Success() throws Exception {
+        Task task = new Task(UUID.randomUUID(), "Test Task", "Test Description", 1L);
+        taskRepository.save(task);
         mockMvc.perform(get("/tasks/" + task.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value(task.getTitle()));
@@ -76,6 +74,8 @@ class TaskControllerIntegrationTest extends PostgresContainer {
     @Test
     @DisplayName("Checking for a successful update")
     void testUpdateTask_Success() throws Exception {
+        Task task = new Task(UUID.randomUUID(), "Test Task", "Test Description", 1L);
+        taskRepository.save(task);
         TaskRequestDTO taskDTO = new TaskRequestDTO("Updated Task", "Updated Description", 1L);
         mockMvc.perform(put("/tasks/" + task.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -97,6 +97,8 @@ class TaskControllerIntegrationTest extends PostgresContainer {
     @Test
     @DisplayName("Checking for successful deletion")
     void testDeleteTask_Success() throws Exception {
+        Task task = new Task(UUID.randomUUID(), "Test Task", "Test Description", 1L);
+        taskRepository.save(task);
         mockMvc.perform(delete("/tasks/" + task.getId()))
                 .andExpect(status().isOk());
     }
