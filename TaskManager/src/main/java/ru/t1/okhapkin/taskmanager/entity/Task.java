@@ -9,6 +9,8 @@ import java.util.UUID;
 public class Task {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", columnDefinition = "UUID DEFAULT uuid_generate_v4()")
     private UUID id;
 
     @Column(name = "title", nullable = false)
@@ -25,6 +27,12 @@ public class Task {
 
     public Task(UUID id, String title, String description, Long userId) {
         this.id = id;
+        this.title = title;
+        this.description = description;
+        this.userId = userId;
+    }
+
+    public Task(String title, String description, Long userId) {
         this.title = title;
         this.description = description;
         this.userId = userId;

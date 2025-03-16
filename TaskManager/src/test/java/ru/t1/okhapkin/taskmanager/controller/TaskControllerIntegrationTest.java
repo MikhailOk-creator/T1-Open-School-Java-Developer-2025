@@ -57,9 +57,9 @@ class TaskControllerIntegrationTest extends PostgresContainer {
     @Test
     @DisplayName("Checking a successful refund by id")
     void testGetTaskById_Success() throws Exception {
-        Task task = new Task(UUID.randomUUID(), "Test Task", "Test Description", 1L);
-        taskRepository.save(task);
-        mockMvc.perform(get("/tasks/" + task.getId()))
+        Task task = new Task("Test Task", "Test Description", 1L);
+        Task savedTask = taskRepository.save(task);
+        mockMvc.perform(get("/tasks/" + savedTask.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value(task.getTitle()));
     }
@@ -74,10 +74,10 @@ class TaskControllerIntegrationTest extends PostgresContainer {
     @Test
     @DisplayName("Checking for a successful update")
     void testUpdateTask_Success() throws Exception {
-        Task task = new Task(UUID.randomUUID(), "Test Task", "Test Description", 1L);
-        taskRepository.save(task);
+        Task task = new Task("Test Task", "Test Description", 1L);
+        Task savedTask = taskRepository.save(task);
         TaskRequestDTO taskDTO = new TaskRequestDTO("Updated Task", "Updated Description", 1L);
-        mockMvc.perform(put("/tasks/" + task.getId())
+        mockMvc.perform(put("/tasks/" + savedTask.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(taskDTO)))
                 .andExpect(status().isOk())
@@ -97,9 +97,9 @@ class TaskControllerIntegrationTest extends PostgresContainer {
     @Test
     @DisplayName("Checking for successful deletion")
     void testDeleteTask_Success() throws Exception {
-        Task task = new Task(UUID.randomUUID(), "Test Task", "Test Description", 1L);
-        taskRepository.save(task);
-        mockMvc.perform(delete("/tasks/" + task.getId()))
+        Task task = new Task("Test Task", "Test Description", 1L);
+        Task savedTask = taskRepository.save(task);
+        mockMvc.perform(delete("/tasks/" + savedTask.getId()))
                 .andExpect(status().isOk());
     }
 

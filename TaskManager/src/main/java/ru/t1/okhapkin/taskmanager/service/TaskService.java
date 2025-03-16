@@ -32,7 +32,6 @@ public class TaskService {
         return toTaskResponseDTO.apply(
                 taskRepository.save(
                         new Task(
-                            UUID.randomUUID(),
                             taskDTO.title(),
                             taskDTO.description(),
                             taskDTO.userID()

@@ -14,7 +14,6 @@ import ru.t1.okhapkin.taskmanager.entity.exception.TaskNotFoundException;
 import ru.t1.okhapkin.taskmanager.repository.TaskRepository;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -89,7 +88,7 @@ class TaskServiceTest {
         TaskRequestDTO taskDTO = new TaskRequestDTO("Test Task", "Updated Description", 1L);
         when(taskRepository.findById(randomId)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> taskService.updateTask(randomId, taskDTO));
+        assertThrows(TaskNotFoundException.class, () -> taskService.updateTask(randomId, taskDTO));
     }
 
     @Test
